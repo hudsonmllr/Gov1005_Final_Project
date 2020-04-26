@@ -1,0 +1,12 @@
+name: FPShiny
+title: FPShiny
+username:
+account: hudson-miller
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2188939
+bundleId: 3068952
+url: https://hudson-miller.shinyapps.io/FPShiny/
+when: 1587942866.32536
+asMultiple: FALSE
+asStatic: FALSE
