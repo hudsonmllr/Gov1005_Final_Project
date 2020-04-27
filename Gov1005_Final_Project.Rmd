@@ -274,7 +274,7 @@ Fig_2 <- Fig1_joined_data %>%
 ```
 
 
-```{r, CH10: Figure 2 (Gender), echo=FALSE}
+```{r, CH10: Figure 2 (College Gender), echo=FALSE}
 
 Fall_1976_2017_num <- read_excel("Education_data/Fall_1976_2017_num.xls")
 
@@ -303,50 +303,30 @@ save("Gen_Race_pct_Female", file="FPShiny/Gen_Race_pct_Female.Rdata")
 # 
 # ggsave("Graphic_1.png", path = "FP_SHINY")
 
-```{r, CH11: Graphic, echo = FALSE}
+```{r, CH11: Figure 2 (Enl Gender), echo = FALSE}
 
-# DOD_Enl_by_Branch_Percent
-# Civ_Race_Pct_G1
+# This data covers 1970 to 2017 and has the percentage of enlisted accession who
+# are female during that period. They are broken down by branch and also have
+# the DOD overall percentage and the civilian figures for people 18-24.
+
+DOD_Gender_Historical <- read_excel("~/Desktop/Gov 1005/Gov1005 Final
+                                    Project/Gov1005_Final_Project/Mil_data/DOD Gender Historical.xlsx")
+
+DOD_Gender_Data <- pivot_longer(DOD_Gender_Historical,
+                                names_to = "Group",
+                                values_to = "Percentage", cols = (-Year))
+
+save("DOD_Gender_Data", file="FPShiny/DOD_Gender_Data.Rdata")
+
+# Final data source for demo day. This is the total figures for fall enrollment
+# by gender so that I can calculate the basic gender percentages.
+
+Fall_Enr_Totals <- read_excel("Education_data/Fall_Enr_Totals.xls")
+
+Fall_Enr_Totals_new <- data.frame(t(Fall_Enr_Totals[,-1]))
+colnames(Fall_Enr_Totals_new) <- Fall_Enr_Totals$Group
+Fall_Enr_Totals_new$Year <- rownames(Fall_Enr_Totals_new)
+Fall_Enr_Totals_tidy <- Fall_Enr_Totals_new %>% mutate("Percent" = (Female/Total)*100) 
+
+save("Fall_Enr_Totals_new", file="FPShiny/Fall_Enr_Totals_tidy.Rdata")
 ```
-
-
-## Could the military learn better gender representation from colleges and could colleges learn better racial diversity from the military?
-
-### About the Project:
-#### The purpose of this project is to compare and analyze the difference in racial and gender diversity between the United States Armed Forces and US colleges and universities. The military has become more racial diverse in last few decades but despite this trend towards diversity, there has not been a surge of females to the armed forces. Likewise, US colleges and universities have seen higher numbers of women enroll but they still lack racial diversity. 
-
-### Methodology:
-#### This project will use college enrollment data gathered from National Center for Education Statistics and military demographic statistics gathered by the Office of the Under Secretary of Defense for Personnel and Readiness and published in the Fiscal Year 2017 Population Representation in the Military Service. In order to compare the new fields, I will first display the racial and gender breakdowns for each field. I will then see if those racial or gender statistics can be explained by where the majority of applicants for the military or college are located.
-
-## https://hudson-miller.shinyapps.io/FP_SHINY/
-# DOD Data
-
-
-#CH 1
-View(FY2017_DOD_Acc)
-# CH 2
-View(DOD_Historical_Racial_Data_)
-# CH 3
-View(DOD_Acc_Branch_Numbers)
-View(DOD_Acc_Branch_Percent_unkrm)
-View(DOD_Enl_Branch_Numbers)
-View(DOD_Enl_Branch_Percent)
-View(DOD_race_by_region)
-# CH 4
-View(FY2017_DOD_Acc_Percent)
-
-# College Data
-
-# CH 5
-View(Fall_enr_76_18_pct)
-View(Fall_enr_76_18_numbers)
-
-# CH 6
-View(ED_Gender_States_2015)
-
-# Ch 7
-View(ED_Gender_2018)
-
-# Ch 8
-
-
