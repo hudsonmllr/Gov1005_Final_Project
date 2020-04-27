@@ -1,8 +1,19 @@
 library(shiny)
-load("Fig1_joined_data_bg.Rdata")
+library(readr)
+library(tidyverse)
+library(janitor)
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+library(ggthemes)
+library(shinythemes)
 
+load("Fig1_joined_data_bg.Rdata")
+load("Fig1_DOD_data.Rdata")
 
 ui <- fluidPage(
+    theme = shinytheme("lumen"),
 titlePanel("Comparing Demographics Between Undergrad Students and Enlisted Service"),
     mainPanel(
         tabsetPanel(
@@ -70,12 +81,29 @@ server <- function(input, output){
         # it is not user friendly.
         
         Fig1_joined_data_bg %>% ggplot(aes(year, y_value, color=group)) +
-            geom_line() +
+            geom_plot() +
             theme_minimal() +
             scale_x_continuous(breaks=c(1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015),
                                labels=c(1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015)) +
             labs(title = Enr_title, x = "Year", y = y_lab, caption = "Source: National Center for Education Statistics")
-    })}
+    })
+    
+    
+    output$branch_graph <- renderPlot({
+        if(input$branch == "Army") {
+            y_value <- Fig1_joined_data_bg$Army
+            y_lab <- "Percentage"
+            Enr_title <- "Percentage of Undergraduate Students Who Are White \n Fall Term from 1976-2017 (selected years)"
+        } 
+        else if(input$race == "Black") {
+            y_value <- Fig1_joined_data_bg$black
+            y_lab <- "Percentage"
+            Enr_title <-
+                
+                
+    
+    
+    }
     
 
 shinyApp(ui = ui, server = server)

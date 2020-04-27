@@ -197,7 +197,7 @@ Fig1_joined_data$black <- Fig1_joined_data$black %>% as.numeric()
 Fig1_joined_data$hispanic <- Fig1_joined_data$hispanic %>% as.numeric()
 Fig1_joined_data$other <- Fig1_joined_data$other %>% as.numeric()
 
-
+save("Fig1_DOD_data", file = "FPShiny/Fig1_DOD_data.Rdata")
 ```
 
 ```{r, CH9: Figure 1 (Race), echo=FALSE}
