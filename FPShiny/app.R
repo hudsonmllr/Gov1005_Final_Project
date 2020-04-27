@@ -1,5 +1,6 @@
 library(shiny)
 library(readr)
+library(gt)
 library(tidyverse)
 library(janitor)
 library(readxl)
@@ -9,7 +10,7 @@ library(plotly)
 library(ggthemes)
 library(shinythemes)
 library(gganimate)
-
+library(broom)
 
 load("Fig1_joined_data_bg.Rdata")
 load("Gen_Race_pct_Male.Rdata")
@@ -93,7 +94,20 @@ titlePanel(
                  mainPanel(
                      plotlyOutput("enr_graph")
                  ))),
-    
+    tabPanel("Predicting Future Shifts",
+             sidebarLayout(
+                 sidebarPanel(
+                     h2("How will the demographic makeup of America's military and
+                        universities continue to shift?"),
+                     p("This simple regression helps to predict how certain demographics will change over time.
+                       As you have seen previously, the hispanic population is projected to continue to rise
+                       at an increasing rate. The projection is not quite as sure for the black population 
+                       though there are some regressions that predict it will continue to rise. But for the 
+                       white population, this predicts the percentage will continue to go down.")),
+                 mainPanel(
+                     gt_output("Regression")
+                 )
+             )),
     tabPanel("About", 
              h1("About the Project"),
              p("The purpose of this project is to compare and analyze the difference in
@@ -222,6 +236,14 @@ server <- function(input, output){
             scale_color_discrete(labels=c("Civilian Population\n(18-24 Years Old)",
                                           "Undergraduate College Students",
                                           "Enlisted Military\n(Non-prior Service Accession)"))
+    })
+    
+    output$Regression <- render_gt({
+        Fig1_joined_data_bg %>% 
+            lm(year ~ white + black + hispanic, data = .) %>%
+            tidy(conf.int = TRUE) %>% 
+            select(term, estimate, conf.low, conf.high) %>% gt() %>%  
+            tab_header(title = "Projecting Future Changes")
     })
     }
 
