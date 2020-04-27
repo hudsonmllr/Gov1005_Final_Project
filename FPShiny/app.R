@@ -18,7 +18,10 @@ load("DOD_Gender_Data.Rdata")
 load("Fall_Enr_Totals_tidy.Rdata")
 
 ui <- navbarPage(theme = shinytheme("slate") ,
-titlePanel("Comparing Demographics Between Undergrad Students and Enlisted Service"),
+titlePanel(
+           tags$head(tags$link(rel = "shortcut icon",
+                               href ="https://vignette.wikia.nocookie.net/marvelcinematicuniverse/images/9/9c/Harvard_shield_wreath.png/revision/latest?cb=20190302143211")),
+           "Comparing Demographics Between Undergrad Students and Enlisted Service"),
     mainPanel(
         tabsetPanel(
     tabPanel("College Demographic Breakdowns",
