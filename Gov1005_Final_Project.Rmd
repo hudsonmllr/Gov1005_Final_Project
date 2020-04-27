@@ -328,5 +328,5 @@ colnames(Fall_Enr_Totals_new) <- Fall_Enr_Totals$Group
 Fall_Enr_Totals_new$Year <- rownames(Fall_Enr_Totals_new)
 Fall_Enr_Totals_tidy <- Fall_Enr_Totals_new %>% mutate("Percent" = (Female/Total)*100) 
 
-save("Fall_Enr_Totals_new", file="FPShiny/Fall_Enr_Totals_tidy.Rdata")
+save("Fall_Enr_Totals_tidy", file="FPShiny/Fall_Enr_Totals_tidy.Rdata")
 ```

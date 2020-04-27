@@ -39,7 +39,11 @@ titlePanel("Comparing Demographics Between Undergrad Students and Enlisted Servi
              sidebarLayout(
                  sidebarPanel(
                      h2("The lack of female representation in the U.S. Armed Forces"),
-                     p("Add comment")),
+                     p("Though there has been an increase in the representation of women on college
+                       campuses, the same can not be said for the U.S. Military. Despite slight increases 
+                       in the female population, the military has a long way to go. There have been certain
+                       steps to encourage more women to participate. One major change was allowing women to
+                       serve in combat roles that had previously been restricted to male service members.")),
                  mainPanel(
                      plotlyOutput("DOD_Civ_Gen_fig"),
                      plotlyOutput("DOD_Branch_Gen_fig"))
@@ -99,13 +103,12 @@ server <- function(input, output){
     output$Enr_Gend <- renderPlotly({
         Fall_Enr_Totals_tidy %>%
             ggplot(aes(Year, Percent)) +
+            geom_bar(stat = "identity", color = "blue") +
             geom_hline(yintercept=50, linetype="dashed", color = "blue") +
-            scale_y_continuous(labels = c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100),
-                               breaks= c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100)) +
-            geom_bar(stat = "identity", color = "#FF6666") +
+            scale_y_continuous(labels = c(0, 10, 20, 30, 40, 50),
+                               breaks= c(0, 10, 20, 30, 40, 50)) +
             theme_economist_white() + labs(x="Year",
-                                           title="Percentage of Student Enrolling in Fall Undergraduate Semester Who Are Female ")
-        
+                                           title="Students Enrolling in Fall Undergraduate Semester Who Are Female")
     })
     
     output$Enr_fml <- renderPlotly({
