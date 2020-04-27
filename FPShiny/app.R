@@ -8,19 +8,31 @@ library(dplyr)
 library(plotly)
 library(ggthemes)
 library(shinythemes)
+library(gganimate)
+
 
 load("Fig1_joined_data_bg.Rdata")
-load("Fig1_DOD_data.Rdata")
+load("Gen_Race_pct_Male.Rdata")
+load("Gen_Race_pct_Female.Rdata")
 
-ui <- fluidPage(
-    theme = shinytheme("lumen"),
+
+ui <- navbarPage(theme = shinytheme("slate"),
 titlePanel("Comparing Demographics Between Undergrad Students and Enlisted Service"),
     mainPanel(
         tabsetPanel(
-    tabPanel("Current Demographic Breakdowns", plotOutput("First_Graph"),
-             h2("Discussion"),
-             p("This is what I found")
-             ),
+    tabPanel("CollegeDemographic Breakdowns",
+             sidebarLayout(
+                 sidebarPanel(
+                     h2("The Changing Face of the American University"),
+                     p("The data for these two graphs was gather from the
+                       National Center for Education Statistics. It shows 
+                       that there have large steps forward in increasing
+                       the level of diversity in American undergraduate
+                       programs")),
+                 mainPanel(
+                     plotlyOutput("Enr_fml"),
+                     plotlyOutput("Enr_ml"))
+             )),
     
     tabPanel("Historical Diversity Data",
              sidebarLayout(
@@ -28,7 +40,7 @@ titlePanel("Comparing Demographics Between Undergrad Students and Enlisted Servi
                      selectInput("race", "Choose Racial Demographic",
                                  choices = c("White" , "Black", "Hispanic"), selected = "White")),
                  mainPanel(
-                     plotOutput("enr_graph")
+                     plotlyOutput("enr_graph")
                  )),
              h2("Discussion"),
              p("This is what I found")
@@ -59,20 +71,20 @@ titlePanel("Comparing Demographics Between Undergrad Students and Enlisted Servi
 
 server <- function(input, output){
     
-    output$enr_graph <- renderPlot({
+    output$enr_graph <- renderPlotly({
         if(input$race == "White") {
             y_value <- Fig1_joined_data_bg$white
             y_lab <- "Percentage"
-            Enr_title <- "Percentage of Undergraduate Students Who Are White \n Fall Term from 1976-2017 (selected years)"
+            Enr_title <- "Percentage of Particular Groups Who Are White \n From 1976-2017 (selected years)"
         } 
         else if(input$race == "Black") {
             y_value <- Fig1_joined_data_bg$black
             y_lab <- "Percentage"
-            Enr_title <- "Percentage of Undergraduate Students Who Are Black \n Fall Term from 1976-2017 (selected years)"
+            Enr_title <- "Percentage of Particular Groups Who Are Black \n From 1976-2017 (selected years)"
         } else {
             y_value <- Fig1_joined_data_bg$hispanic
             y_lab <- "Percentage"
-            Enr_title <- "Percentage of Undergraduate Students Who Are Hispanic \n Fall Term from 1976-2017 (selected years)"
+            Enr_title <- "Percentage of Particular Groups Who Are Hispanic \n From 1976-2017 (selected years)"
         }
         
         # Use ggplot to create the framework for the graph. I used geom point to
@@ -81,29 +93,38 @@ server <- function(input, output){
         # it is not user friendly.
         
         Fig1_joined_data_bg %>% ggplot(aes(year, y_value, color=group)) +
-            geom_plot() +
+            geom_point() + geom_line() +
             theme_minimal() +
             scale_x_continuous(breaks=c(1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015),
                                labels=c(1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015)) +
-            labs(title = Enr_title, x = "Year", y = y_lab, caption = "Source: National Center for Education Statistics")
+            labs(title = Enr_title, x = "Year", y = y_lab, caption =
+            "Sources: National Center for Education Statistics\n
+            Office of The Under Secretary of Defense, Personnel\n
+            and Readiness: 2017 Population Report") +
+            scale_color_discrete(labels=c("Civilian Population\n(18-24 Years Old)",
+                                          "Undergraduate College Students",
+                                          "Enlisted Military\n(Non-prior Service Accession)"))
     })
     
+    output$Enr_fml <- renderPlotly({
+        Gen_Race_pct_Female %>%
+            ggplot(aes(year, Percent, fill=Race)) +
+            geom_bar(stat = "identity", position = "dodge") +
+            theme_economist_white() + labs(x="Year",
+                                     title="Female Race Statistices for the Fall Undergraduate Semester")
+        
+        })
     
-    output$branch_graph <- renderPlot({
-        if(input$branch == "Army") {
-            y_value <- Fig1_joined_data_bg$Army
-            y_lab <- "Percentage"
-            Enr_title <- "Percentage of Undergraduate Students Who Are White \n Fall Term from 1976-2017 (selected years)"
-        } 
-        else if(input$race == "Black") {
-            y_value <- Fig1_joined_data_bg$black
-            y_lab <- "Percentage"
-            Enr_title <-
-                
-                
-    
-    
+    output$Enr_ml <- renderPlotly({
+         Gen_Race_pct_Male %>% ggplot(aes(year, Percent, fill=Race)) +
+            geom_bar(stat = "identity", position = "dodge") +
+            theme_economist_white() + labs(x="Year", title="Male Race Statistices for the Fall Undergraduate Semester")
+        
+        })
+     
     }
     
 
 shinyApp(ui = ui, server = server)
+
+
