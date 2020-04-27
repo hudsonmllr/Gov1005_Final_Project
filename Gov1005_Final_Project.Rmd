@@ -299,10 +299,6 @@ Gen_Race_pct_Female %>%  ggplot(aes(Year, Percent, color=Gender, fill=Race)) +
 save("Gen_Race_pct_Female", file="FPShiny/Gen_Race_pct_Female.Rdata")
 ```
 
-# ggplot(G1_Data, aes(x = Fiscal_Year, y = White, color = Group)) + geom_line() + theme_grey() + labs(title = "Percentage of Population Who are White", subtitle = "Comparing Civilians(ages 18-24 years old), Active Enlisted Department of Defense Service Members, and Enrolled Undergraduate Students", caption = "Sources: National Center for Education Statistics and Department of Defense", color = "Population group")
-# 
-# ggsave("Graphic_1.png", path = "FP_SHINY")
-
 ```{r, CH11: Figure 2 (Enl Gender), echo = FALSE}
 
 # This data covers 1970 to 2017 and has the percentage of enlisted accession who
